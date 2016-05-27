@@ -6,78 +6,130 @@ from GenericPlayer import PlayerActive, Objective
 
 pygame.init()
 
-gameWindow = pygame.display.set_mode((1000, 600))                  #Create the game window, set up
-pygame.display.set_caption("Pygame Tutorial")
-clock = pygame.time.Clock()
+class Tutorial_Game():
+    def __init__(self):
 
-enemies = BasicEnemy.Enemy.enemies
+        self.gw = pygame.display.set_mode((1000, 600))                  #Create the game window, set up
+        pygame.display.set_caption("Pygame Tutorial")
+        self.clock = pygame.time.Clock()
 
-player = PlayerActive()                                            #The player object
-objv = Objective()
-scoreB = utils.ScoreBoard()
+        self.enemies = BasicEnemy.Enemy.enemies
 
-FPS = 30
-gameActive = True
-while gameActive:                                                  #Game loop
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            gameActive = False
+        self.player = PlayerActive()                                            #The player object
+        self.objv = Objective()
+        self.scoreB = utils.ScoreBoard()
 
-    activeKey = pygame.key.get_pressed()                           #Events for key presses
-    if activeKey[pygame.K_RIGHT]:
-        player.move(1, 0)
-    if activeKey[pygame.K_LEFT]:
-        player.move(-1, 0)
-    if activeKey[pygame.K_UP]:
-        player.move(0, -1)
-    if activeKey[pygame.K_DOWN]:
-        player.move(0, 1)
-    if activeKey[pygame.K_SPACE]:
-        player.doObjective(objv)
+        self.FPS = 30
 
-    cur = pygame.mouse.get_pos()
-    mouse = pygame.mouse.get_pressed()                             #Events for mouse presses
+    def gotoMenu(self):
+        menu = True
+        while menu:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        menu = False
 
-    gameWindow.fill(utils.white)
+                print "Intro"
 
-    if mouse[0]:                                                   #Left-Click events
-        player.shoot(cur)
+                pygame.display.update()
+                self.clock.tick(self.FPS)
 
-    #COLLISION DETECTION
-    playerCollisions = pygame.sprite.spritecollide(player, enemies, False)
-    for enemy in playerCollisions:                                 #Enemy-to-player collisions
-        enemy.destroy()
-        player.takeDamage()
+    def pause(self):
+        pause = True
+        while pause:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p:
+                        print "game unpaused"
+                        pause = False
 
-    bulletCollision = pygame.sprite.groupcollide(enemies, player.bullets, False, True)
-    for enemy in bulletCollision:                                  #Enemy-to-bullet collisions
-        enemy.takeDamage()
+                text = utils.getFont(size=96, style="bold").render("Paused", True, utils.black)
+                textRect = text.get_rect()
+                textRect.center = self.gw.get_rect().center
 
-    objvCollision = pygame.sprite.spritecollide(objv, player.bullets, False)
-    for bullet in objvCollision:
-        tempLett = objv.winMessage[len(objv.displayMessage)]
-        if tempLett.upper() == bullet.name:
-            objv.displayMessage += tempLett
-            objv.redraw()
-            bullet.destroy()
-            if objv.winMessage[len(objv.displayMessage)] == " ":
-                objv.displayMessage += " "
+                self.gw.blit(text, textRect)
 
-    #Spawning
-    BasicEnemy.spawn()
-    #Updates
-    player.update(gameWindow)
-    scoreB.update(gameWindow )
-    enemies.update(player)
-    objv.update(gameWindow)
+                pygame.display.update()
+                self.clock.tick(self.FPS)
 
-    #Drawing
-    enemies.draw(gameWindow)
+    def playGame(self):
+        self.gotoMenu()
 
-    #END drawing stuff
+        gameActive = True
+        while gameActive:                                                  #Game loop
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    gameActive = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p:
+                        print "game Paused"
+                        self.pause()
 
-    pygame.display.update()
-    clock.tick(FPS)
 
-pygame.quit()
-quit()
+            activeKey = pygame.key.get_pressed()                           #Events for key presses
+            if activeKey[pygame.K_RIGHT]:
+                self.player.move(1, 0)
+            if activeKey[pygame.K_LEFT]:
+                self.player.move(-1, 0)
+            if activeKey[pygame.K_UP]:
+                self.player.move(0, -1)
+            if activeKey[pygame.K_DOWN]:
+                self.player.move(0, 1)
+            if activeKey[pygame.K_SPACE]:
+                self.player.doObjective(self.objv)
+
+            cur = pygame.mouse.get_pos()
+            mouse = pygame.mouse.get_pressed()                             #Events for mouse presses
+
+            self.gw.fill(utils.white)
+
+            if mouse[0]:                                                   #Left-Click events
+                self.player.shoot(cur)
+
+            #COLLISION DETECTION
+            playerCollisions = pygame.sprite.spritecollide(self.player, self.enemies, False)
+            for enemy in playerCollisions:                                 #Enemy-to-player collisions
+                enemy.destroy()
+                self.player.takeDamage()
+
+            bulletCollision = pygame.sprite.groupcollide(self.enemies, self.player.bullets, False, True)
+            for enemy in bulletCollision:                                  #Enemy-to-bullet collisions
+                enemy.takeDamage()
+
+            objvCollision = pygame.sprite.spritecollide(self.objv, self.player.bullets, False)
+            for bullet in objvCollision:
+                tempLett = self.objv.winMessage[len(self.objv.displayMessage)]
+                if tempLett.upper() == bullet.name:
+                    self.objv.displayMessage += tempLett
+                    self.objv.redraw()
+                    bullet.destroy()
+                    if self.objv.winMessage[len(self.objv.displayMessage)] == " ":
+                        self.objv.displayMessage += " "
+
+            #Spawning
+            BasicEnemy.spawn()
+            #Updates
+            self.player.update(self.gw)
+            self.scoreB.update(self.gw)
+            self.enemies.update(self.player)
+            self.objv.update(self.gw)
+
+            #Drawing
+            self.enemies.draw(self.gw)
+
+            #END drawing stuff
+
+            pygame.display.update()
+            self.clock.tick(self.FPS)
+
+        pygame.quit()
+        quit()
+
+game = Tutorial_Game()
+game.playGame()
