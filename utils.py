@@ -19,13 +19,14 @@ class ScoreBoard():
     playerAmmo = 0
     playerLives = 0
 
-    def __init__(self):
+    def __init__(self, gw):
 
-        self.image = pygame.Surface((200, 150))
-        self.image.fill(white)
+        self.surf = pygame.Surface((200, 150))
+        self.image = gw.subsurface((800, 0, 200, 150))
+
         self.rect = self.image.get_rect()
         self.rect.x = 800
-        self.rect.y = 0
+
 
     def drawEnemiesKilled(self):
 
@@ -43,10 +44,10 @@ class ScoreBoard():
         self.image.blit(text, (5, 60))
 
     def update(self, gw):
-        self.image.fill(white)
+        self.surf.fill(white)
 
         self.drawEnemiesKilled()
         self.drawPlayerAmmo()
         self.drawPlayerLives()
-
-        gw.blit(self.image, self.rect)
+        self.surf.blit(self.image, (0, 0))
+        gw.blit(self.surf, self.rect)

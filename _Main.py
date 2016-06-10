@@ -3,6 +3,7 @@ import pygame
 import BasicEnemy
 import utils
 from GenericPlayer import PlayerActive, Objective
+from ClickableRect import TextButton
 
 pygame.init()
 
@@ -17,22 +18,43 @@ class Tutorial_Game():
 
         self.player = PlayerActive()                                            #The player object
         self.objv = Objective()
-        self.scoreB = utils.ScoreBoard()
+        self.scoreB = utils.ScoreBoard(self.gw)
 
         self.FPS = 30
 
+    def quitGame(self):
+        pygame.quit()
+        quit()
+
     def gotoMenu(self):
-        menu = True
-        while menu:
+        rect = self.gw.get_rect()
+
+        def startPlay():
+            self.menu = False
+
+
+        playB = TextButton((rect.centerx, rect.centery-50), (200, 80), utils.green, "Play", startPlay)
+        quitB = TextButton((rect.centerx, rect.centery+50), (200, 80), utils.red, "Quit", self.quitGame)
+
+        self.menu = True
+        while self.menu:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
+                    self.quitGame()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
                         menu = False
 
-                print "Intro"
+                self.gw.fill(utils.white)
+
+                text = utils.getFont(size=82, style="bold").render("Tutorial Game", True, utils.black)
+                textRect = text.get_rect()
+                textRect.center = self.gw.get_rect().center
+                textRect.y -= 200
+                self.gw.blit(text, textRect)
+
+                playB.update(self.gw)
+                quitB.update(self.gw)
 
                 pygame.display.update()
                 self.clock.tick(self.FPS)
@@ -128,8 +150,7 @@ class Tutorial_Game():
             pygame.display.update()
             self.clock.tick(self.FPS)
 
-        pygame.quit()
-        quit()
+        self.quitGame()
 
 game = Tutorial_Game()
 game.playGame()

@@ -16,8 +16,8 @@ class PlayerActive(pygame.sprite.Sprite):
         self.image.fill(utils.blue)
         self.rect = self.image.get_rect()
 
-        self.rect.x = 100
-        self.rect.y = 100
+        self.rect.x = 450
+        self.rect.y = 250
         self.speed = 5
         self.lives = 3
         utils.ScoreBoard.playerLives = self.lives
