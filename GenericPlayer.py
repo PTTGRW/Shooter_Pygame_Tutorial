@@ -19,7 +19,7 @@ class PlayerActive(pygame.sprite.Sprite):
         self.rect.x = 450
         self.rect.y = 250
         self.speed = 5
-        self.lives = 3
+        self.lives = 30
         utils.ScoreBoard.playerLives = self.lives
 
         self.spawnDelay = 0                                     #The delay that spawns a new ammunition unit

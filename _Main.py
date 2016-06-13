@@ -4,6 +4,7 @@ import BasicEnemy
 import utils
 from GenericPlayer import PlayerActive, Objective
 from ClickableRect import TextButton
+from backgroundMap import gameMap
 
 pygame.init()
 
@@ -19,6 +20,7 @@ class Tutorial_Game():
         self.player = PlayerActive()                                            #The player object
         self.objv = Objective()
         self.scoreB = utils.ScoreBoard(self.gw)
+        self.map = gameMap()
 
         self.FPS = 30
 
@@ -110,6 +112,7 @@ class Tutorial_Game():
             mouse = pygame.mouse.get_pressed()                             #Events for mouse presses
 
             self.gw.fill(utils.white)
+            self.map.resetMap()
 
             if mouse[0]:                                                   #Left-Click events
                 self.player.shoot(cur)
@@ -137,16 +140,16 @@ class Tutorial_Game():
             #Spawning
             BasicEnemy.spawn()
             #Updates
-            self.player.update(self.gw)
+            self.player.update(self.map.activeMap)
             self.scoreB.update(self.gw)
             self.enemies.update(self.player)
-            self.objv.update(self.gw)
+            self.objv.update(self.map.activeMap)
 
             #Drawing
-            self.enemies.draw(self.gw)
+            self.enemies.draw(self.map.activeMap)
 
             #END drawing stuff
-
+            self.map.update(self.gw, self.player.rect)
             pygame.display.update()
             self.clock.tick(self.FPS)
 
