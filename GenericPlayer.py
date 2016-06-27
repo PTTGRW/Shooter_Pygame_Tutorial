@@ -149,7 +149,7 @@ class Bullet(pygame.sprite.Sprite):
         ydiff = target[1] - self.rect.y - self.rect.height/2
 
         magnitude = math.sqrt(float(xdiff ** 2 + ydiff ** 2))        #Magnitude of the hypotenuse for travel
-        numFrames = int(magnitude / self.speed)                      #Number of frames the bullet must travel
+        numFrames = 1 + int(magnitude / self.speed)                      #Number of frames the bullet must travel
 
         self.xmove = xdiff/numFrames
         self.ymove = ydiff/numFrames
@@ -164,9 +164,9 @@ class Bullet(pygame.sprite.Sprite):
         self.kill()
 
     def checkDist(self):
-        if self.rect.x < -100 or self.rect.x > 1100:
+        if self.rect.x < -100 or self.rect.x > 2200:
             self.destroy()
-        if self.rect.y < -100 or self.rect.y > 700:
+        if self.rect.y < -100 or self.rect.y > 2200:
             self.destroy()
 
     def update(self):
@@ -177,20 +177,22 @@ class Bullet(pygame.sprite.Sprite):
 
 class Objective():
     def __init__(self):
-        self.winMessage = "If this is spelled then you WIN!"
+        self.winMessage = "i i i i i i"
         self.displayMessage = ""
         self.charPos = 0
-        self.image = pygame.Surface((800, 100))
+        self.image = pygame.Surface((80, 80))
         self.redraw()
 
     def redraw(self):
         self.image.fill(utils.green)
 
-        self.ghostText = utils.getFont(size=24, style="bold").render(self.winMessage, True, utils.gray)
-        self.image.blit(self.ghostText, (25, 25))
+        elements = [str(len(self.displayMessage)), "of", str(len(self.winMessage))]
 
-        self.text = utils.getFont(size=24, style="bold").render(self.displayMessage, True, utils.black)
-        self.image.blit(self.text, (25, 25))
+        for i, string in enumerate(elements):
+            self.text = utils.getFont().render(string, True, utils.black)
+            self.image.blit(self.text, (20, 5 + i*22))
+
+
         self.rect = self.image.get_rect()
         self.rect.x = 100
         self.rect.y = 500

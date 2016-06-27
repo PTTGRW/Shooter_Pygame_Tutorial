@@ -30,17 +30,17 @@ class ScoreBoard():
 
     def drawEnemiesKilled(self):
 
-        text = getFont(size=24, style="bold").render(("Killed: " + str(ScoreBoard.enemiesKilled)), True, black)
+        text = getFont(size=24, style="bold").render(("Killed: " + str(ScoreBoard.enemiesKilled)), True, white)
         self.image.blit(text, (5, 10))
 
     def drawPlayerAmmo(self):
 
-        text = getFont(size=24, style="bold").render(("Ammo: " + str(ScoreBoard.playerAmmo)), True, black)
+        text = getFont(size=24, style="bold").render(("Ammo: " + str(ScoreBoard.playerAmmo)), True, white)
         self.image.blit(text, (5, 35))
 
     def drawPlayerLives(self):
 
-        text = getFont(size=24, style="bold").render(("Lives: " + str(ScoreBoard.playerLives)), True, black)
+        text = getFont(size=24, style="bold").render(("Lives: " + str(ScoreBoard.playerLives)), True, white)
         self.image.blit(text, (5, 60))
 
     def update(self, gw):

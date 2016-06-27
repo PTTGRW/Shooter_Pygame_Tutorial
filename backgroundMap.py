@@ -39,6 +39,7 @@ class gameMap():
     def update(self, gw, playerRect):
         rect = gw.get_rect()
 
+        #Scrolls the map
         if playerRect.centerx > rect.centerx + 25 - self.offsetX:
             self.offsetX -= self.scrollSpeed
         elif playerRect.centerx < rect.centerx - 25 - self.offsetX:
@@ -49,7 +50,7 @@ class gameMap():
         elif playerRect.centery < rect.centery - 25 - self.offsetY:
             self.offsetY += self.scrollSpeed
 
-
+        #If map is past boundaries, set map to max/min
         if self.offsetX > 0:
             self.offsetX = 0
         elif self.offsetX < rect.width - 2100:
@@ -60,7 +61,15 @@ class gameMap():
         elif self.offsetY < rect.height - 2100:
             self.offsetY = rect.height - 2100
 
+        if playerRect.left < 0:
+            playerRect.left = 0
+        elif playerRect.right > 2100:
+            playerRect.right = 2100
 
+        if playerRect.top < 0:
+            playerRect.top = 0
+        elif playerRect.bottom > 2100:
+            playerRect.bottom = 2100
 
 
 

@@ -115,7 +115,7 @@ class Tutorial_Game():
             self.map.resetMap()
 
             if mouse[0]:                                                   #Left-Click events
-                self.player.shoot(cur)
+                self.player.shoot((cur[0] - self.map.offsetX, cur[1] - self.map.offsetY))
 
             #COLLISION DETECTION
             playerCollisions = pygame.sprite.spritecollide(self.player, self.enemies, False)
@@ -128,20 +128,21 @@ class Tutorial_Game():
                 enemy.takeDamage()
 
             objvCollision = pygame.sprite.spritecollide(self.objv, self.player.bullets, False)
-            for bullet in objvCollision:
-                tempLett = self.objv.winMessage[len(self.objv.displayMessage)]
-                if tempLett.upper() == bullet.name:
-                    self.objv.displayMessage += tempLett
-                    self.objv.redraw()
-                    bullet.destroy()
-                    if self.objv.winMessage[len(self.objv.displayMessage)] == " ":
-                        self.objv.displayMessage += " "
+            if self.objv.winMessage != self.objv.displayMessage:
+                for bullet in objvCollision:
+                    tempLett = self.objv.winMessage[len(self.objv.displayMessage)]
+                    if tempLett.upper() == bullet.name:
+                        self.objv.displayMessage += tempLett
+                        self.objv.redraw()
+                        bullet.destroy()
+                        if self.objv.winMessage != self.objv.displayMessage:
+                            if self.objv.winMessage[len(self.objv.displayMessage)] == " ":
+                                self.objv.displayMessage += " "
 
             #Spawning
             BasicEnemy.spawn()
             #Updates
             self.player.update(self.map.activeMap)
-            self.scoreB.update(self.gw)
             self.enemies.update(self.player)
             self.objv.update(self.map.activeMap)
 
@@ -150,6 +151,10 @@ class Tutorial_Game():
 
             #END drawing stuff
             self.map.update(self.gw, self.player.rect)
+
+            #UI Stuff
+            self.scoreB.update(self.gw)
+
             pygame.display.update()
             self.clock.tick(self.FPS)
 
